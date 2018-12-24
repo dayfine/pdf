@@ -177,7 +177,7 @@ func (f Font) getEncoder() TextEncoding {
 		case "Identity-H":
 			return f.charmapEncoding()
 		default:
-			println("unknown encoding", enc.Name())
+			fmt.Println("unknown encoding", enc.Name())
 			return &nopEncoder{}
 		}
 	case Dict:
@@ -185,7 +185,7 @@ func (f Font) getEncoder() TextEncoding {
 	case Null:
 		return f.charmapEncoding()
 	default:
-		println("unexpected encoding", enc.String())
+		fmt.Println("unexpected encoding", enc.String())
 		return &nopEncoder{}
 	}
 }
@@ -324,7 +324,7 @@ Parse:
 				}
 			}
 		}
-		println("no code space found")
+		fmt.Println("no code space found")
 		r = append(r, noRune)
 		raw = raw[1:]
 	}
@@ -352,14 +352,14 @@ func readCmap(toUnicode Value) *cmap {
 			n = int(stk.Pop().Int64())
 		case "endcodespacerange":
 			if n < 0 {
-				println("missing begincodespacerange")
+				fmt.Println("missing begincodespacerange")
 				ok = false
 				return
 			}
 			for i := 0; i < n; i++ {
 				hi, lo := stk.Pop().RawString(), stk.Pop().RawString()
 				if len(lo) == 0 || len(lo) != len(hi) {
-					println("bad codespace range")
+					fmt.Println("bad codespace range")
 					ok = false
 					return
 				}
@@ -392,7 +392,7 @@ func readCmap(toUnicode Value) *cmap {
 			stk.Pop().Name() // key
 			stk.Push(value)
 		default:
-			println("interp\t", op)
+			fmt.Println("interp\t", op)
 		}
 	})
 	if !ok {
@@ -664,7 +664,7 @@ func (p Page) Content() Content {
 			g.Tf = p.Font(f)
 			enc = g.Tf.Encoder()
 			if enc == nil {
-				println("no cmap for", f)
+				fmt.Println("no cmap for", f)
 				enc = &nopEncoder{}
 			}
 			g.Tfs = args[1].Float64()
